@@ -12,9 +12,10 @@ class TweetController extends Controller
      */
     public function index()
     {
-        //
-        $tweets = Tweet::with('user')->latest()->get();
-        return view('tweets.index', compact('tweets'));
+        // 🔽 liked のデータも合わせて取得するよう修正
+         $tweets = Tweet::with(['user', 'liked'])->latest()->get();
+         // dd($tweets);
+         return view('tweets.index', compact('tweets'));
     }
 
     /**
@@ -46,9 +47,8 @@ class TweetController extends Controller
      */
     public function show(Tweet $tweet)
     {
-        //dd($tweet);
-        //詳細画面を表示する処理
-        return view('tweets.show',compact('tweet'));
+    $tweet->load('comments');
+    return view('tweets.show', compact('tweet'));
     }
 
     /**
@@ -86,4 +86,5 @@ class TweetController extends Controller
 
         return redirect()->route('tweets.index');
     }
+    
 }
